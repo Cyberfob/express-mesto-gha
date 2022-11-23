@@ -2,8 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const users = require('./routes/users');
 const cards = require('./routes/cards');
-
-const ERROR_CODE_404 = 404;
+const constants = require('./utils/constants');
 
 // Настройка порта
 const { PORT = 3000 } = process.env;
@@ -27,21 +26,13 @@ app.use((req, res, next) => {
 
 // Роуты Users
 app.use('/', users);
-// app.use('/users', users);
-app.use('/users/:userId', users);
-app.use('/users/me/avatar', users);
-app.use('/users/me', users);
-app.use('/users', users);
 
 // Роуты Cards
 app.use('/', cards);
-app.use('/cards', cards); // (req, res) => {res.send(req.params)
-app.use('/cards/:cardsId', cards);
-app.use('/cards/:cardsId/likes', cards);
 
 // Заглушка для запроса неуществующих адресов
 app.all('*', (req, res) => {
-  res.status(ERROR_CODE_404).send({
+  res.status(constants.ERROR_CODE_NOT_FOUND).send({
     message: 'Запрашиваемая страница не найдена',
   });
 });
