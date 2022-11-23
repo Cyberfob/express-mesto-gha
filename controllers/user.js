@@ -11,7 +11,7 @@ module.exports.getUser = (req, res) => {
     .catch((err) => {
       switch (err.name) {
         case 'CastError':
-          res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Пользователь не найден' });
+          res.status(constans.ERROR_CODE_NOT_FOUND).send({ message: 'Пользователь не найден' });
           break;
         case 'ValidationError':
           res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
