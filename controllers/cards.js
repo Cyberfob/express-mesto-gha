@@ -1,8 +1,8 @@
-const card = require('../models/card');
+const Card = require('../models/card');
 const constans = require('../utils/constants');
 
 module.exports.getCards = (req, res) => {
-  card.find()
+  Card.find()
     .then((cardsData) => res.send({ data: cardsData }))
     .catch(() => res.status(constans.ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' }));
 };
@@ -10,8 +10,8 @@ module.exports.getCards = (req, res) => {
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
 
-  card.create({ name, link, owner: req.user._id })
-    .then((cardData) => res.status(201).send({ data: cardData }))
+  Card.create({ name, link, owner: req.user._id })
+    .then((cardData) => res.status(constans.STATUS_CREATED_201).send({ data: cardData }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
@@ -22,7 +22,7 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
-  card.findByIdAndRemove(req.params.cardId)
+  Card.findByIdAndRemove(req.params.cardId)
     .then((cardData) => {
       if (cardData) {
         return res.send({ data: cardData });
@@ -31,7 +31,7 @@ module.exports.deleteCard = (req, res) => {
     })
     .catch((err) => {
       if (err.message === 'Карточка не найдена') {
-        res.status(constans.ERROR_CODE_NOT_FOUND).send({ message: 'Ошибка в теле запроса' });
+        res.status(constans.ERROR_CODE_NOT_FOUND).send({ message: 'Карточка не найдена' });
         return;
       } if (err.name === 'CastError') {
         res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
@@ -41,7 +41,7 @@ module.exports.deleteCard = (req, res) => {
     });
 };
 module.exports.likeCard = (req, res) => {
-  card.findByIdAndUpdate(
+  Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
     { new: true },
@@ -54,7 +54,7 @@ module.exports.likeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.message === 'Карточка не найдена') {
-        res.status(constans.ERROR_CODE_NOT_FOUND).send({ message: 'Ошибка в теле запроса' });
+        res.status(constans.ERROR_CODE_NOT_FOUND).send({ message: 'Карточка не найдена' });
         return;
       } if (err.name === 'CastError') {
         res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
@@ -65,7 +65,7 @@ module.exports.likeCard = (req, res) => {
 };
 
 module.exports.dislikeCard = (req, res) => {
-  card.findByIdAndUpdate(
+  Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
     { new: true },
@@ -78,7 +78,7 @@ module.exports.dislikeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.message === 'Карточка не найдена') {
-        res.status(constans.ERROR_CODE_NOT_FOUND).send({ message: 'Ошибка в теле запроса' });
+        res.status(constans.ERROR_CODE_NOT_FOUND).send({ message: 'Карточка не найдена' });
         return;
       } if (err.name === 'CastError') {
         res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });

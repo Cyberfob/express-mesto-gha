@@ -25,10 +25,10 @@ app.use((req, res, next) => {
 });
 
 // Роуты Users
-app.use('/', users);
+app.use('/users', users);
 
 // Роуты Cards
-app.use('/', cards);
+app.use('/cards', cards);
 
 // Заглушка для запроса неуществующих адресов
 app.all('*', (req, res) => {

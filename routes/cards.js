@@ -3,14 +3,14 @@ const {
   getCards, createCard, deleteCard, likeCard, dislikeCard,
 } = require('../controllers/cards');
 
-cards.get('/cards', getCards);
+cards.get('/', getCards);
 
-cards.post('/cards', createCard);
+cards.post('/', createCard);
 
-cards.delete('/cards/:cardId', deleteCard);
+cards.delete('/:cardId', deleteCard);
 
-cards.put('/cards/:cardId/likes', likeCard);
+cards.put('/:cardId/likes', likeCard);
 
-cards.delete('/cards/:cardId/likes', dislikeCard);
+cards.delete('/:cardId/likes', dislikeCard);
 
 module.exports = cards;
