@@ -50,6 +50,7 @@ module.exports.updateUser = (req, res) => {
       throw new Error('Пользователь не найден');
     })
     .catch((err) => {
+      console.log(err)
       if (err.message === 'Пользователь не найден') {
         res.status(constans.ERROR_CODE_NOT_FOUND).send({ message: 'Пользователь не найден' });
         return;
