@@ -43,12 +43,17 @@ module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
-    .then((userData) => res.send({ data: userData }))
+    .then((userData) => {
+      if (userData) {
+        return res.send({ data: userData });
+      }
+      throw new Error('Пользователь не найден');
+    })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.message === 'Пользователь не найден') {
         res.status(constans.ERROR_CODE_NOT_FOUND).send({ message: 'Пользователь не найден' });
         return;
-      } if (err.name === 'ValidationError') {
+      } if (err.name === 'CastError') {
         res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
       } else {
         res.status(constans.ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
@@ -60,12 +65,17 @@ module.exports.updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
-    .then((userData) => res.send({ data: userData }))
+    .then((userData) => {
+      if (userData) {
+        return res.send({ data: userData });
+      }
+      throw new Error('Пользователь не найден');
+    })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.message === 'Пользователь не найден') {
         res.status(constans.ERROR_CODE_NOT_FOUND).send({ message: 'Пользователь не найден' });
         return;
-      } if (err.name === 'ValidationError') {
+      } if (err.name === 'CastError') {
         res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
       } else {
         res.status(constans.ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
