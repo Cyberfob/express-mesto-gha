@@ -53,7 +53,7 @@ module.exports.updateUser = (req, res) => {
       if (err.message === 'Пользователь не найден') {
         res.status(constans.ERROR_CODE_NOT_FOUND).send({ message: 'Пользователь не найден' });
         return;
-      } if (err.name === 'CastError') {
+      } if (err.name === 'ValidationError') {
         res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
       } else {
         res.status(constans.ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
