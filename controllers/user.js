@@ -7,17 +7,20 @@ module.exports.getAllUsers = (req, res) => usersSchema.find()
 
 module.exports.getUser = (req, res) => {
   usersSchema.findById(req.params.userId)
-    .then((userData) => res.send({ data: userData }))
+    .then((userData) => {
+      if (userData) {
+        return res.send({ data: userData });
+      }
+      throw new Error('Пользователь не найден');
+    })
     .catch((err) => {
-      switch (err.name) {
-        case 'CastError':
-          res.status(constans.ERROR_CODE_NOT_FOUND).send({ message: 'Пользователь не найден' });
-          break;
-        case 'ValidationError':
-          res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
-          break;
-        default:
-          res.status(constans.ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
+      if (err.message === 'Пользователь не найден') {
+        res.status(constans.ERROR_CODE_NOT_FOUND).send({ message: 'Ошибка в теле запроса' });
+        return;
+      } if (err.name === 'CastError') {
+        res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
+      } else {
+        res.status(constans.ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
       }
     });
 };

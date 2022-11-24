@@ -23,17 +23,20 @@ module.exports.createCard = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   card.findByIdAndRemove(req.params.cardId)
-    .then((cardData) => res.send({ data: cardData }))
+    .then((cardData) => {
+      if (cardData) {
+        return res.send({ data: cardData });
+      }
+      throw new Error('Карточка не найдена');
+    })
     .catch((err) => {
-      switch (err.name) {
-        case 'CastError':
-          res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
-          break;
-        case 'ValidationError':
-          res.status(constans.ERROR_CODE_NOT_FOUND).send({ message: 'Ошибка в теле запроса' });
-          break;
-        default:
-          res.status(constans.ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
+      if (err.message === 'Карточка не найдена') {
+        res.status(constans.ERROR_CODE_NOT_FOUND).send({ message: 'Ошибка в теле запроса' });
+        return;
+      } if (err.name === 'CastError') {
+        res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
+      } else {
+        res.status(constans.ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
       }
     });
 };
@@ -43,17 +46,20 @@ module.exports.likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .then((cardData) => res.send({ data: cardData }))
+    .then((cardData) => {
+      if (cardData) {
+        return res.send({ data: cardData });
+      }
+      throw new Error('Карточка не найдена');
+    })
     .catch((err) => {
-      switch (err.name) {
-        case 'CastError':
-          res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
-          break;
-        case 'ValidationError':
-          res.status(constans.ERROR_CODE_NOT_FOUND).send({ message: 'Ошибка в теле запроса' });
-          break;
-        default:
-          res.status(constans.ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
+      if (err.message === 'Карточка не найдена') {
+        res.status(constans.ERROR_CODE_NOT_FOUND).send({ message: 'Ошибка в теле запроса' });
+        return;
+      } if (err.name === 'CastError') {
+        res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
+      } else {
+        res.status(constans.ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
       }
     });
 };
@@ -64,17 +70,20 @@ module.exports.dislikeCard = (req, res) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
-    .then((cardData) => res.send({ data: cardData }))
+    .then((cardData) => {
+      if (cardData) {
+        return res.send({ data: cardData });
+      }
+      throw new Error('Карточка не найдена');
+    })
     .catch((err) => {
-      switch (err.name) {
-        case 'CastError':
-          res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
-          break;
-        case 'ValidationError':
-          res.status(constans.ERROR_CODE_NOT_FOUND).send({ message: 'Ошибка в теле запроса' });
-          break;
-        default:
-          res.status(constans.ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
+      if (err.message === 'Карточка не найдена') {
+        res.status(constans.ERROR_CODE_NOT_FOUND).send({ message: 'Ошибка в теле запроса' });
+        return;
+      } if (err.name === 'CastError') {
+        res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
+      } else {
+        res.status(constans.ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
       }
     });
 };
