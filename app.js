@@ -3,6 +3,9 @@ const mongoose = require('mongoose');
 const users = require('./routes/users');
 const cards = require('./routes/cards');
 const constants = require('./utils/constants');
+const {createUser, login} = require('./controllers/user');
+const auth = require('./middlewares/auth')
+const { errors } = require('celebrate');
 
 // Настройка порта
 const { PORT = 3000 } = process.env;
@@ -14,15 +17,24 @@ const app = express();
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
 });
-/* мидлвары : Json и заглушка для _id */
+// мидлвар : Json
 app.use(express.json());
-app.use((req, res, next) => {
+
+/*app.use((req, res, next) => {
   req.user = {
     _id: '6372a4ba464f43e9202b335c', // вставьте сюда _id созданного в предыдущем пункте пользователя
   };
 
   next();
-});
+});*/
+
+//Роуты без авторизации
+app.post('/signin', login);
+app.post('/signup', createUser);
+
+app.use(auth); //Мидлвар авторизации
+
+//Роуты требующие авторизации
 
 // Роуты Users
 app.use('/users', users);
@@ -30,11 +42,24 @@ app.use('/users', users);
 // Роуты Cards
 app.use('/cards', cards);
 
-// Заглушка для запроса неуществующих адресов
+
+// Заглушка для запроса неуществующих адресо
 app.all('*', (req, res) => {
   res.status(constants.ERROR_CODE_NOT_FOUND).send({
     message: 'Запрашиваемая страница не найдена',
   });
+});
+
+app.use(errors());
+
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message } = err;
+
+  res.status(statusCode).send({
+      message: statusCode === 500
+        ? 'На сервере произошла ошибка'
+        : message
+    });
 });
 
 app.listen(PORT, () => {

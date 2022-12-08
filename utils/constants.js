@@ -1,11 +1,38 @@
-const ERROR_CODE_BAD_REQUEST = 400;
-const ERROR_CODE_NOT_FOUND = 404;
-const ERROR_CODE_INTERNAL_SERVER_ERROR = 500;
 const STATUS_CREATED_201 = 201;
+const SSK = 'some-secret-key'
 
+class NotFoundError extends Error {
+  constructor(message){
+    super(message)
+    this.statusCode = 404;
+  }
+}
+
+class BadRequestError extends Error {
+  constructor(message){
+    super(message)
+    this.statusCode = 400;
+  }
+}
+
+class InternalServerError extends Error {
+  constructor(message){
+    super(message)
+    this.statusCode = 500;
+  }
+}
+
+class AuthError extends Error {
+  constructor(message){
+    super(message)
+    this.statusCode = 401;
+  }
+}
 module.exports = {
-  ERROR_CODE_BAD_REQUEST,
-  ERROR_CODE_NOT_FOUND,
-  ERROR_CODE_INTERNAL_SERVER_ERROR,
   STATUS_CREATED_201,
+  SSK,
+  NotFoundError,
+  BadRequestError,
+  InternalServerError,
+  AuthError,
 };
