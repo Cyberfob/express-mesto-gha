@@ -39,7 +39,15 @@ app.post('/signin', celebrate({
     about: Joi.string().min(2).max(30),
   })
 }), login);
-app.post('/signup', createUser);
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+    name: Joi.string().min(2).max(30),
+    avatar: Joi.number().integer().min(18),
+    about: Joi.string().min(2).max(30),
+  })
+}), createUser);
 
 app.use(auth); //Мидлвар авторизации
 
