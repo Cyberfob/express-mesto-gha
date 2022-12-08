@@ -42,15 +42,11 @@ module.exports.createUser = (req, res, next) => {
   const hash = bcrypt.hash(password, 10);
   User.create({ name, about, avatar, email, hash })
     .then((userData) => {
-      if (err.code === 11000) {return res.status(409).send({ message: 'Ошибка при создании пользователя' });}
-      res.status(constans.STATUS_CREATED_201).send({ data: userData })})
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка при создании пользователя' });
-        return;
+      if (err.code === 11000) {
+        return res.status(409).send({ message: 'Ошибка при создании пользователя' });
       }
-      res.status(constans.ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
-    });
+      res.status(constans.STATUS_CREATED_201).send({ data: userData })})
+    .catch((next))
 };
 
 module.exports.updateUser = (req, res, next) => {
