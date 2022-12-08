@@ -5,7 +5,8 @@ const cards = require('./routes/cards');
 const constants = require('./utils/constants');
 const {createUser, login} = require('./controllers/user');
 const auth = require('./middlewares/auth')
-const { errors } = require('celebrate');
+const { celebrate, Joi, errors, Segments } = require('celebrate');
+const bodyParser = require('body-parser')
 
 // Настройка порта
 const { PORT = 3000 } = process.env;
@@ -18,7 +19,7 @@ const app = express();
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
 });
 // мидлвар : Json
-app.use(express.json());
+app.use(bodyParser.json());
 
 /*app.use((req, res, next) => {
   req.user = {
@@ -29,7 +30,15 @@ app.use(express.json());
 });*/
 
 //Роуты без авторизации
-app.post('/signin', login);
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+    name: Joi.string().min(2).max(30),
+    avatar: Joi.number().integer().min(18),
+    about: Joi.string().min(2).max(30),
+  })
+}), login);
 app.post('/signup', createUser);
 
 app.use(auth); //Мидлвар авторизации
