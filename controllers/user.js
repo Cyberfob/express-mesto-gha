@@ -33,24 +33,28 @@ module.exports.getUser = (req, res, next) => {
     });
 };
 
-module.exports.createUser = (err, req, res, next) => {
-  const { name, about, avatar, email, password, } = req.body;
-  console.log({ name, about, avatar, email, password, })
-  if (!validator.isEmail(email)) {
-    res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка при создании пользователя' }); //Временно
-    return;
-  }
-
-  const hash = bcrypt.hash(password, 10);
-  User.create({ name, about, avatar, email, password })
-    .then((userData) => {
-      console.log('4')
+module.exports.createUser = (req, res, next) => {
+  console.log("0")
+  bcrypt.hash(req.body.password, 10)
+  .then((hash) => {
+    console.log("1")
+    User.create({
+      name: req.body.name,
+      about: req.body.about,
+      avatar: req.body.avatar,
+      email: req.body.email,
+      password: hash })
+    .then((user) => {
+      user = user.toObject();
+      delete user["password"]
+      res.status(STATUS_CREATED_201).send({data: user})
+    })
+  })
+    .catch((err)=> {
       if (err.code === 11000) {
-        return res.status(409).send({ message: 'Ошибка при создании пользователя' });
-      }
-      console.log('5')
-      res.status(constans.STATUS_CREATED_201).send({ data: userData })})
-    .catch(next)
+        next(new BadRequestError("Неправильные почта или пароль"))
+      } else {next(err)}
+    })
 };
 
 module.exports.updateUser = (req, res, next) => {
