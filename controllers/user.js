@@ -1,6 +1,5 @@
 const User = require('../models/user');
 const { STATUS_CREATED_201, SSK, NotFoundError, BadRequestError, InternalServerError, AuthError,} = require('../utils/constants');
-const validator = require('validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
