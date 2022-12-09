@@ -33,20 +33,24 @@ module.exports.getUser = (req, res, next) => {
     });
 };
 
-module.exports.createUser = (req, res, next) => {
+module.exports.createUser = (err, req, res, next) => {
   const { name, about, avatar, email, password, } = req.body;
+  console.log({ name, about, avatar, email, password, })
   if (!validator.isEmail(email)) {
     res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка при создании пользователя' }); //Временно
     return;
   }
+
   const hash = bcrypt.hash(password, 10);
-  User.create({ name, about, avatar, email, hash })
+  User.create({ name, about, avatar, email, password })
     .then((userData) => {
+      console.log('4')
       if (err.code === 11000) {
         return res.status(409).send({ message: 'Ошибка при создании пользователя' });
       }
+      console.log('5')
       res.status(constans.STATUS_CREATED_201).send({ data: userData })})
-    .catch((next))
+    .catch(next)
 };
 
 module.exports.updateUser = (req, res, next) => {
