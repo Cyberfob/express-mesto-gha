@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema({
 }
 );
 
-userSchema.static.findUserByCredentials = function (email, password) {
+userSchema.statics.findUserByCredentials = function findUserByCredentials (email, password) {
   return this.findOne({email}).select('+password')
     .then((user) => {
       if (!user) {
@@ -60,7 +60,9 @@ userSchema.static.findUserByCredentials = function (email, password) {
           delete user["password"]
           return user
         })
+        .catch(err => {console.log('auth1')})
     })
+    .catch(err=> {console.log('auth2')})
 }
 
 module.exports = mongoose.model('user', userSchema);

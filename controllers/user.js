@@ -14,7 +14,7 @@ module.exports.getAllUsers = (req, res, next) => User.find()
   .catch(next);
 
 module.exports.getUser = (req, res, next) => {
-  User.findById(req.params.userId)
+  User.findById(req.user.userId)
     .then((userData) => {
       if (userData) {
         return res.send({ data: userData });
@@ -112,14 +112,15 @@ module.exports.updateUserAvatar = (req, res, next) => {
 
 module.exports.login = (req, res, next) => {
   const {email, password} = req.body;
-
+console.log('auth')
     return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({_id: user._id}, constans.SSK, {expiresIn: '7d'})
+      const token = jwt.sign({_id: user._id}, SSK, {expiresIn: '7d'})
       res.cookie(jwt, token, { maxAge: 3600000 * 24 * 7, htppOnly: true }).send(`Добро пожаловать ${user.name}`)
     })
-    .catch (() => {
-      res.status(401).send({message: 'Ошибка аутентификации'}) //временно
+    .catch ((err) => {
+      console.log(err)
+      res.status(401).send({message: 'Ошибка аутентификации1'}) //временно
     })
 
 }
