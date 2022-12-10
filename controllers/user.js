@@ -37,6 +37,8 @@ module.exports.createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
   .then((hash) => {
     console.log("1")
+    return User.init()
+    .then(()=> {
     User.create({
       name: req.body.name,
       about: req.body.about,
@@ -48,6 +50,7 @@ module.exports.createUser = (req, res, next) => {
       user = user.toObject();
       delete user["password"]
       res.status(STATUS_CREATED_201).send({data: user})
+    })
     })
   })
     .catch((err)=> {
