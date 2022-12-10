@@ -1,6 +1,8 @@
 const STATUS_CREATED_201 = 201;
 const SSK = 'some-secret-key'
 
+const regEx = /^https?:\/\/[www.]?[a-zA-Z0-9]+[\w\-._~:/?#[\]$&'()*+,;*]{2,}#?$/;
+
 class NotFoundError extends Error {
   constructor(message){
     super(message)
@@ -37,4 +39,5 @@ module.exports = {
   BadRequestError,
   InternalServerError,
   AuthError,
+  regEx,
 };

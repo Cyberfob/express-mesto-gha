@@ -7,6 +7,7 @@ const {createUser, login} = require('./controllers/user');
 const auth = require('./middlewares/auth')
 const { celebrate, Joi, errors, Segments } = require('celebrate');
 const bodyParser = require('body-parser')
+const {regEx} = require('./utils/constants')
 
 // Настройка порта
 const { PORT = 3000 } = process.env;
@@ -35,8 +36,8 @@ app.post('/signin', celebrate({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
     name: Joi.string().min(2).max(30),
-    avatar: Joi.link(),
     about: Joi.string().min(2).max(30),
+    avatar: Joi.string().pattern(regEx)
   })
 }), login);
 app.post('/signup', celebrate({
@@ -44,8 +45,8 @@ app.post('/signup', celebrate({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
     name: Joi.string().min(2).max(30),
-    avatar: Joi.link(),
     about: Joi.string().min(2).max(30),
+    avatar: Joi.string().pattern(regEx)
   })
 }), createUser);
 

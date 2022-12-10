@@ -57,7 +57,9 @@ module.exports.createUser = (req, res, next) => {
       } else if (err.name === 'ValidationError') {
         next(new Error("valid"))
       }
-      else {next(err)}
+      else {
+        console.log("7")
+        next(err)}
     })
 };
 
