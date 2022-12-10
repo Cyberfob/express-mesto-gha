@@ -31,13 +31,20 @@ class AuthError extends Error {
   }
 }
 
+class ConflictError extends Error {
+  constructor(message){
+    super(message)
+    this.statusCode = 409;
+  }
+}
 
 module.exports = {
   STATUS_CREATED_201,
   SSK,
+  regEx,
   NotFoundError,
   BadRequestError,
   InternalServerError,
   AuthError,
-  regEx,
+  ConflictError,
 };

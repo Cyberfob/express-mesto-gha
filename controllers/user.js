@@ -1,5 +1,5 @@
 const User = require('../models/user');
-const { STATUS_CREATED_201, SSK, NotFoundError, BadRequestError, InternalServerError, AuthError,} = require('../utils/constants');
+const { STATUS_CREATED_201, SSK, NotFoundError, BadRequestError, InternalServerError, AuthError, ConflictError,} = require('../utils/constants');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -37,8 +37,6 @@ module.exports.createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
   .then((hash) => {
     console.log("1")
-    return User.init()
-    .then(()=> {
     User.create({
       name: req.body.name,
       about: req.body.about,
@@ -51,18 +49,20 @@ module.exports.createUser = (req, res, next) => {
       delete user["password"]
       res.status(STATUS_CREATED_201).send({data: user})
     })
+    .catch(err => {
+      if (err.code === 11000) {
+        next(new ConflictError("Неправильные почта или пароль"))
+      }
     })
   })
     .catch((err)=> {
       console.log("3")
-      if (err.code === 11000) {
-        next(new BadRequestError("Неправильные почта или пароль"))
-      } else if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError') {
         next(new Error("valid"))
-      }
-      else {
+      } else {
         console.log("7")
-        next(err)}
+        next(err)
+      }
     })
 };
 

@@ -17,7 +17,7 @@ const app = express();
 
 // Подключение к БД
 
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
+mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {autoIndex: true
 });
 // мидлвар : Json
 app.use(bodyParser.json());
