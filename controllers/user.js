@@ -44,15 +44,20 @@ module.exports.createUser = (req, res, next) => {
       email: req.body.email,
       password: hash })
     .then((user) => {
+      console.log("4")
       user = user.toObject();
       delete user["password"]
       res.status(STATUS_CREATED_201).send({data: user})
     })
   })
     .catch((err)=> {
+      console.log("3")
       if (err.code === 11000) {
         next(new BadRequestError("Неправильные почта или пароль"))
-      } else {next(err)}
+      } else if (err.name === 'ValidationError') {
+        next(new Error("valid"))
+      }
+      else {next(err)}
     })
 };
 

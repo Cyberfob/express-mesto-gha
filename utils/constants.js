@@ -28,6 +28,8 @@ class AuthError extends Error {
     this.statusCode = 401;
   }
 }
+
+
 module.exports = {
   STATUS_CREATED_201,
   SSK,

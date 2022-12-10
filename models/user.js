@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
 
+const linkAvatar = /^https?:\/\/[www.]?[a-zA-Z0-9]+[\w\-._~:/?#[\]$&'()*+,;*]{2,}#?$/;
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -20,11 +21,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
-      validator: function(data)  {
-        return /[-a-zA-Z0-9@:%_\+.~#?&\/=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&\/=]*)?/gi.test(data)
-      },
-      message: 'Поле Аватар должно быть ссылкой'
-    }
+      validator: (value) => (linkAvatar).test(value),
+      message: () => 'Неправильный формат ссылки',
+    },
   },
   password: {
     type: String,
@@ -37,11 +36,11 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
     validate: {
-      validator: (data) => validator.isEmail(data)
-      },
-      message: "Ошибка поля Email",
+      validator: (value) => validator.isEmail(value),
+      message: () => 'Неправильная почта',
     },
   },
+}
 );
 
 userSchema.static.findUserByCredentials = function (email, password) {
@@ -56,7 +55,9 @@ userSchema.static.findUserByCredentials = function (email, password) {
           if (!result) {
             throw new Error('Неправильная почта или пароль')
           }
-          return user;
+          user = user.toObject();
+          delete user["password"]
+          return user
         })
     })
 }

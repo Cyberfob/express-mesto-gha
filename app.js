@@ -35,7 +35,7 @@ app.post('/signin', celebrate({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
     name: Joi.string().min(2).max(30),
-    avatar: Joi.string().min(18),
+    avatar: Joi.string().min(4),
     about: Joi.string().min(2).max(30),
   })
 }), login);
