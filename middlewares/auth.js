@@ -16,7 +16,7 @@ module.exports = (req, res, next) => {
   } catch {
     res.status(401).send({message:'Ошибка авторизации'})
   }
-
+  console.log('auth OK')
   req.user = payload;
   next();
 }

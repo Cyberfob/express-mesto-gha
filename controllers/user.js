@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 
 module.exports.getAllUsers = (req, res, next) => User.find()
   .then((userData) => {
+
     if (userData) {
       return res.send({ data: userData })
     }
@@ -25,9 +26,9 @@ module.exports.getUser = (req, res, next) => {
       if (err.message === 'Пользователь не найден') {
         next(err);
       } else if (err.name === 'CastError') {
-        res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
+        res.status(ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
       } else {
-        res.status(constans.ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
+        res.status(ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
       }
     });
 };
@@ -78,12 +79,12 @@ module.exports.updateUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.message === 'Пользователь не найден') {
-        res.status(constans.ERROR_CODE_NOT_FOUND).send({ message: 'Пользователь не найден' });
+        res.status(ERROR_CODE_NOT_FOUND).send({ message: 'Пользователь не найден' });
         return;
       } if (err.name === 'ValidationError') {
-        res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
+        res.status(ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
       } else {
-        res.status(constans.ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
+        res.status(ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
       }
     });
 };
@@ -100,12 +101,12 @@ module.exports.updateUserAvatar = (req, res, next) => {
     })
     .catch((err) => {
       if (err.message === 'Пользователь не найден') {
-        res.status(constans.ERROR_CODE_NOT_FOUND).send({ message: 'Пользователь не найден' });
+        res.status(ERROR_CODE_NOT_FOUND).send({ message: 'Пользователь не найден' });
         return;
       } if (err.name === 'CastError') {
-        res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
+        res.status(ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
       } else {
-        res.status(constans.ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
+        res.status(ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
       }
     });
 };
@@ -116,16 +117,23 @@ console.log('auth')
     return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({_id: user._id}, SSK, {expiresIn: '7d'})
-      res.cookie(jwt, token, { maxAge: 3600000 * 24 * 7, htppOnly: true }).send(`Добро пожаловать ${user.name}`)
+      console.log(token)
+      res.cookie(jwt, token, { maxAge: 3600000 * 24 * 7, htppOnly: true }).send({message: `Добро пожаловать ${user.name}`})
     })
     .catch ((err) => {
-      console.log(err)
-      res.status(401).send({message: 'Ошибка аутентификации1'}) //временно
+      console.log('11111111111111')
+      res.status(401).send({message: 'Ошибка аутентификации'}) //временно
     })
 
 }
 
-module.exports.userInfo = (req, res) => {
-  const user = req.user
-  return res.send({data: user})
+module.exports.userInfo = (req, res,) => {
+  console.log('123')
+  User.findById(req.user._id)
+  .then((userData) => {
+    userData = userData.toObject();
+    delete userData["password"]
+    res.send({data: userData})
+  })
+  .catch(err => {console.log(err)})
 }

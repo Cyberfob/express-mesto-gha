@@ -5,11 +5,11 @@ const { getAllUsers, getUser, updateUser, updateUserAvatar, userInfo } = require
 
 users.get('/', getAllUsers);
 
-users.get('/:userId', getUser);
-
 users.get('/me', userInfo);
 
 users.patch('/me', updateUser);
+
+users.get('/:userId', getUser);
 
 users.patch('/me/avatar', updateUserAvatar);
 

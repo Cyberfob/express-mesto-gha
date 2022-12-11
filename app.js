@@ -7,7 +7,9 @@ const {createUser, login} = require('./controllers/user');
 const auth = require('./middlewares/auth')
 const { celebrate, Joi, errors, Segments } = require('celebrate');
 const bodyParser = require('body-parser')
-const {regEx} = require('./utils/constants')
+const {regEx} = require('./utils/constants');
+const cookieParser = require('cookie-parser');
+
 
 // Настройка порта
 const { PORT = 3000 } = process.env;
@@ -21,7 +23,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {autoIndex: true
 });
 // мидлвар : Json
 app.use(bodyParser.json());
-
+app.use(cookieParser());
 /*app.use((req, res, next) => {
   req.user = {
     _id: '6372a4ba464f43e9202b335c', // вставьте сюда _id созданного в предыдущем пункте пользователя
