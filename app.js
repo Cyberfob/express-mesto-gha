@@ -22,16 +22,10 @@ const app = express();
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {autoIndex: true
 });
+
 // мидлвар : Json
 app.use(bodyParser.json());
 app.use(cookieParser());
-/*app.use((req, res, next) => {
-  req.user = {
-    _id: '6372a4ba464f43e9202b335c', // вставьте сюда _id созданного в предыдущем пункте пользователя
-  };
-
-  next();
-});*/
 
 //Роуты без авторизации
 app.post('/signin', celebrateAuth, login);
