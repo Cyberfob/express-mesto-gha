@@ -1,5 +1,5 @@
 const User = require('../models/user');
-const { STATUS_CREATED_201, SSK, NotFoundError, BadRequestError, InternalServerError, AuthError, ConflictError,} = require('../utils/constants');
+const { STATUS_CREATED_201, SSK, NotFoundError, BadRequestError, InternalServerError, ConflictError,} = require('../utils/constants');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 

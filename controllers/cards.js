@@ -1,23 +1,23 @@
 const Card = require('../models/card');
-const constans = require('../utils/constants');
+const { STATUS_CREATED_201, NotFoundError, BadRequestError } = require('../utils/constants');
 
 module.exports.getCards = (req, res, next) => {
   Card.find()
     .then((cardsData) => res.send({ data: cardsData }))
-    .catch(() => res.status(constans.ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' }));
+    .catch(next);
 };
 
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user._id })
-    .then((cardData) => res.status(constans.STATUS_CREATED_201).send({ data: cardData }))
+    .then((cardData) => res.status(STATUS_CREATED_201).send({ data: cardData }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
+        next(new BadRequestError('Ошибка в теле запроса'));
         return;
       }
-      res.status(constans.ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
+      next(err);
     });
 };
 
@@ -31,12 +31,12 @@ module.exports.deleteCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.message === 'Карточка не найдена') {
-        res.status(constans.ERROR_CODE_NOT_FOUND).send({ message: 'Карточка не найдена' });
+        next(new NotFoundError('Карточка не найдена'));
         return;
       } if (err.name === 'CastError') {
-        res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
+        next(new BadRequestError('Ошибка в теле запроса'));
       } else {
-        res.status(constans.ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
+        next(err);
       }
     });
 };
@@ -54,12 +54,12 @@ module.exports.likeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.message === 'Карточка не найдена') {
-        res.status(constans.ERROR_CODE_NOT_FOUND).send({ message: 'Карточка не найдена' });
+        next(new NotFoundError('Карточка не найдена'));
         return;
       } if (err.name === 'CastError') {
-        res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
+        next(new BadRequestError('Ошибка в теле запроса'));
       } else {
-        res.status(constans.ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
+        next(err);
       }
     });
 };
@@ -78,12 +78,12 @@ module.exports.dislikeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.message === 'Карточка не найдена') {
-        res.status(constans.ERROR_CODE_NOT_FOUND).send({ message: 'Карточка не найдена' });
+        next(new NotFoundError('Карточка не найдена'));
         return;
       } if (err.name === 'CastError') {
-        res.status(constans.ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
+        next(new BadRequestError('Ошибка в теле запроса'));
       } else {
-        res.status(constans.ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
+        next(err);
       }
     });
 };
