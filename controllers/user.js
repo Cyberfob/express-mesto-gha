@@ -118,7 +118,7 @@ console.log('auth')
     .then((user) => {
       const token = jwt.sign({_id: user._id}, SSK, {expiresIn: '7d'})
       console.log(token)
-      res.cookie(jwt, token, { maxAge: 3600000 * 24 * 7, htppOnly: true }).send({message: `Добро пожаловать ${user.name}`})
+      res.send({token})
     })
     .catch ((err) => {
       console.log('11111111111111')
