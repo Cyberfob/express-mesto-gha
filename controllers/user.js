@@ -15,7 +15,7 @@ module.exports.getAllUsers = (req, res, next) => User.find()
   .catch(next);
 
 module.exports.getUser = (req, res, next) => {
-  User.findById(req.user.userId)
+  User.findById(req.params.userId)
     .then((userData) => {
       if (userData) {
         return res.send({ data: userData });
@@ -26,7 +26,8 @@ module.exports.getUser = (req, res, next) => {
       if (err.message === 'Пользователь не найден') {
         next(err);
       } else if (err.name === 'CastError') {
-        res.status(ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
+        next(new BadRequestError('Ошибка в теле запроса'))
+        //res.status(ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
       } else {
         res.status(ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
       }
