@@ -1,5 +1,5 @@
 const users = require('express').Router();
-const {celebrateId, celebrateUpdateMe} = require('../validators/validator')
+const { celebrateId, celebrateUpdateMe, celebrateUserMeAvatar } = require('../validators/validator')
 
 
 const { getAllUsers, getUser, updateUser, updateUserAvatar, userInfo } = require('../controllers/user');
@@ -12,6 +12,6 @@ users.patch('/me', celebrateUpdateMe, updateUser);
 
 users.get('/:userId', celebrateId, getUser);
 
-users.patch('/me/avatar', updateUserAvatar);
+users.patch('/me/avatar', celebrateUserMeAvatar, updateUserAvatar);
 
 module.exports = users;

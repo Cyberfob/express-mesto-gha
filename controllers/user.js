@@ -101,12 +101,11 @@ module.exports.updateUserAvatar = (req, res, next) => {
     })
     .catch((err) => {
       if (err.message === 'Пользователь не найден') {
-        res.status(ERROR_CODE_NOT_FOUND).send({ message: 'Пользователь не найден' });
-        return;
-      } if (err.name === 'CastError') {
-        res.status(ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
+        next(new NotFoundError('Пользователь не найден'))
+      } else if (err.name === 'CastError') {
+        next(new BadRequestError('Ошибка в теле запроса'))
       } else {
-        res.status(ERROR_CODE_INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
+        next(err)
       }
     });
 };
