@@ -26,7 +26,7 @@ module.exports.getUser = (req, res, next) => {
       if (err.message === 'Пользователь не найден') {
         next(new NotFoundError('Пользователь не найден'))
       } else if (err.name === 'CastError') {
-        next(new BadRequestError('Ошибка в теле запроса'))
+        next(new NotFoundError('Пользователь не найден'))
       } else {
         next(err)
       }

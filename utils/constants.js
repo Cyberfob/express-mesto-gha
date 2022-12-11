@@ -38,6 +38,13 @@ class ConflictError extends Error {
   }
 }
 
+class ForbiddenError extends Error {
+  constructor(message){
+    super(message)
+    this.statusCode = 403;
+  }
+}
+
 module.exports = {
   STATUS_CREATED_201,
   SSK,
@@ -47,4 +54,5 @@ module.exports = {
   InternalServerError,
   AuthError,
   ConflictError,
+  ForbiddenError,
 };
