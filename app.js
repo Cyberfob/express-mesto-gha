@@ -5,10 +5,11 @@ const cards = require('./routes/cards');
 const constants = require('./utils/constants');
 const {createUser, login} = require('./controllers/user');
 const auth = require('./middlewares/auth')
-const { celebrate, Joi, errors, Segments } = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
 const bodyParser = require('body-parser')
 const {regEx} = require('./utils/constants');
 const cookieParser = require('cookie-parser');
+const {celebrateAuth} = require('./validators/validator')
 
 
 // Настройка порта
@@ -33,24 +34,8 @@ app.use(cookieParser());
 });*/
 
 //Роуты без авторизации
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string().pattern(regEx)
-  })
-}), login);
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string().pattern(regEx)
-  })
-}), createUser);
+app.post('/signin', celebrateAuth, login);
+app.post('/signup', celebrateAuth, createUser);
 
 app.use(auth); //Мидлвар авторизации
 

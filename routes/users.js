@@ -1,15 +1,16 @@
 const users = require('express').Router();
-//const celebrate = require('celebrate');
+const {celebrateId, celebrateUpdateMe} = require('../validators/validator')
+
 
 const { getAllUsers, getUser, updateUser, updateUserAvatar, userInfo } = require('../controllers/user');
 
 users.get('/', getAllUsers);
 
-users.get('/me', userInfo);
+users.get('/me', celebrateUpdateMe, userInfo);
 
-users.patch('/me', updateUser);
+users.patch('/me', celebrateUpdateMe, updateUser);
 
-users.get('/:userId', getUser);
+users.get('/:userId', celebrateId, getUser);
 
 users.patch('/me/avatar', updateUserAvatar);
 
