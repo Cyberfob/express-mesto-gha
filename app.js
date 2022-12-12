@@ -2,12 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const users = require('./routes/users');
 const cards = require('./routes/cards');
-const constants = require('./utils/constants');
 const {createUser, login} = require('./controllers/user');
 const auth = require('./middlewares/auth')
 const { errors } = require('celebrate');
 const bodyParser = require('body-parser')
-const {regEx} = require('./utils/constants');
+const { NotFoundError } = require('./utils/constants');
 const cookieParser = require('cookie-parser');
 const {celebrateAuth} = require('./validators/validator')
 
@@ -43,10 +42,8 @@ app.use('/cards', cards);
 
 
 // Заглушка для запроса неуществующих адресо
-app.all('*', (req, res) => {
-  res.status(constants.ERROR_CODE_NOT_FOUND).send({
-    message: 'Запрашиваемая страница не найдена',
-  });
+app.all('/*', (req, res, next) => {
+  next(new NotFoundError('Страница не существует'));
 });
 
 app.use(errors());
