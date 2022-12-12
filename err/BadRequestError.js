@@ -1,4 +1,6 @@
-class BadRequestError extends Error {
+const HTTPError = require('./HTTPError');
+
+class BadRequestError extends HTTPError {
   constructor(message) {
     super(message, 400);
   }
