@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { STATUS_CREATED_201, SSK } = require('../utils/constants');
 
-const HTTPError = require('../err/HTTPError');
 const NotFoundError = require('../err/NotFoundError');
 const BadRequestError = require('../err/BadRequestError');
 const InternalServerError = require('../err/InternalServerError');

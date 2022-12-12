@@ -1,6 +1,4 @@
-const HTTPError = require('./HTTPError');
-
-class InternalServerError extends HTTPError {
+class InternalServerError extends Error {
   constructor(message) {
     super(message, 500);
   }
