@@ -25,18 +25,17 @@ module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .then((cardData) => {
       if (!cardData) {
-        throw new NotFoundError('Карточка не найдена')
-      }
-      if (cardData.owner.toString() === req.params.cardId) {
+        throw new NotFoundError('Карточка не найдена');
+      } else if (cardData.owner.toString() !== req.user._id) {
+        throw new ForbiddenError('Вы не можете удалять карточки других пользователей');
+      } else {
         cardData.remove()
-        .then(cardData => {res.send({data: cardData})})
-      }
-      else {
-        throw new ForbiddenError('Вы не можете удалять карточки других пользователей')
+          .then(() => res.send({ data: cardData }))
+          .catch(next);
       }
     })
     .catch((err) => {
-      if (err instanceof ForbiddenError) {
+      if (err instanceof NotFoundError) {
         next(err);
       } else if (err.name === 'CastError') {
         next(new BadRequestError('Ошибка в теле запроса'));
@@ -45,6 +44,7 @@ module.exports.deleteCard = (req, res, next) => {
       }
     });
 };
+
 module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
