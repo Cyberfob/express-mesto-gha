@@ -4,14 +4,16 @@ const {
   createCard,
   deleteCard,
   likeCard,
-  dislikeCard,} = require('../controllers/cards');
+  dislikeCard,
+} = require('../controllers/cards');
 const {
   celebrateCards,
-  celebrateCardsParam } = require('../validators/validator')
+  celebrateCardsParam,
+} = require('../validators/validator');
 
 cards.get('/', getCards);
 
-cards.post('/',celebrateCards, createCard);
+cards.post('/', celebrateCards, createCard);
 
 cards.delete('/:cardId', celebrateCardsParam, deleteCard);
 

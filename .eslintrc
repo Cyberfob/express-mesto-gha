@@ -3,7 +3,6 @@
     "airbnb-base"],
   "rules": {
     "no-underscore-dangle": ["error", { "allow": ["_id"] }],
-    "eslint object-curly-newline": ["disable", "always"]
   }
 }
 
