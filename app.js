@@ -7,7 +7,7 @@ const users = require('./routes/users');
 const cards = require('./routes/cards');
 const { createUser, login } = require('./controllers/user');
 const auth = require('./middlewares/auth');
-const { NotFoundError } = require('./err/NotFoundError');
+const NotFoundError = require('./err/NotFoundError');
 const { celebrateAuth } = require('./validators/validator');
 
 // Настройка порта
@@ -45,14 +45,17 @@ app.all('/*', (req, res, next) => {
 
 app.use(errors());
 
-app.use((err, req, res) => {
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
 
-  res.status(statusCode).send({
-    message: statusCode === 500
-      ? `На сервере произошла ошибка${err}`
-      : message,
-  });
+  res
+    .status(statusCode)
+    .send({
+      message: statusCode === 500
+        ? 'На сервере произошла ошибка'
+        : message,
+    });
 });
 
 app.listen(PORT, () => {

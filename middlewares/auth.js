@@ -1,23 +1,22 @@
 const jwt = require('jsonwebtoken');
-const {SSK} = require('../utils/constants');
-
+const { SSK } = require('../utils/constants');
 
 module.exports = (req, res, next) => {
-  const { authorization } = req.headers
+  const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    return res.status(401).send({message:'Ошибка авторизации'});
+    res.status(401).send({ message: 'Ошибка авторизации' });
   }
 
-  const token = authorization.replace('Bearer ', '')
+  const token = authorization.replace('Bearer ', '');
   let payload;
 
   try {
-    payload = jwt.verify(token, SSK)
-  } catch {
-    res.status(401).send({message:'Ошибка авторизации'})
+    payload = jwt.verify(token, SSK);
+  } catch (err) {
+    res.status(401).send({ message: 'Ошибка авторизации' });
   }
-  console.log('auth OK')
+
   req.user = payload;
   next();
-}
+};
