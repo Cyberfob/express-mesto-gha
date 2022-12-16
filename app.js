@@ -1,14 +1,24 @@
+const dotenv = require('dotenv');
+require('dotenv').config();
 const express = require('express');
 const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const users = require('./routes/users');
 const cards = require('./routes/cards');
 const { createUser, login } = require('./controllers/user');
 const auth = require('./middlewares/auth');
 const NotFoundError = require('./err/NotFoundError');
 const { celebrateAuth } = require('./validators/validator');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+
+const { NODE_ENV } = process.env;
+
+const config = dotenv.config({
+  path: NODE_ENV === 'production' ? '.env' : '.env.common',
+}).parsed;
 
 // Настройка порта
 const { PORT = 3000 } = process.env;
@@ -20,9 +30,28 @@ const app = express();
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb', { autoIndex: true });
 
+const allowedCors = [
+  'localhost:3000',
+];
+
+app.set('config', config);
+
+app.use(cors({
+  origin: allowedCors,
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
 // мидлвар : Json
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+app.use(requestLogger);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 // Роуты без авторизации
 app.post('/signin', celebrateAuth, login);
@@ -37,6 +66,8 @@ app.use('/users', users);
 
 // Роуты Cards
 app.use('/cards', cards);
+
+app.use(errorLogger);
 
 // Заглушка для запроса неуществующих адресо
 app.all('/*', (req, res, next) => {

@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const { SSK } = require('../utils/constants');
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
@@ -9,10 +8,11 @@ module.exports = (req, res, next) => {
   }
 
   const token = authorization.replace('Bearer ', '');
+  const { JWT_SECRET } = req.app.get('config');
   let payload;
 
   try {
-    payload = jwt.verify(token, SSK);
+    payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
     res.status(401).send({ message: 'Ошибка авторизации' });
   }
