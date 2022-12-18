@@ -5,7 +5,7 @@ const BadRequestError = require('../err/BadRequestError');
 const ForbiddenError = require('../err/ForbiddenError');
 
 module.exports.getCards = (req, res, next) => {
-  Card.find()
+  Card.find().populate(['likes', 'owner'])
     .then((cardsData) => res.send({ data: cardsData }))
     .catch(next);
 };
@@ -77,7 +77,7 @@ module.exports.dislikeCard = (req, res, next) => {
     req.params.cardId,
     { $pull: { likes: req.user._id } },
     { new: true },
-  )
+  ).populate(['likes', 'owner'])
     .then((cardData) => {
       if (cardData) {
         return res.send({ data: cardData });
