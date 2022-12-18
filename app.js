@@ -31,6 +31,10 @@ const app = express();
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb', { autoIndex: true });
 
 const allowedCors = [
+  'http://apetruhin.nomoredomains.club',
+  'https://apetruhin.nomoredomains.club',
+  'http://api.apetruhin.nomoredomains.club',
+  'https://api.apetruhin.nomoredomains.club',
   'localhost:3000',
 ];
 
