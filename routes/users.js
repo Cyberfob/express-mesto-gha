@@ -11,7 +11,7 @@ const {
 
 users.get('/', getAllUsers);
 
-users.get('/me', celebrateUpdateMe, userInfo);
+users.get('/me', userInfo);
 
 users.patch('/me', celebrateUpdateMe, updateUser);
 

@@ -21,7 +21,7 @@ const config = dotenv.config({
 }).parsed;
 
 // Настройка порта
-const { PORT = 3000 } = process.env;
+const { PORT = 3001 } = process.env;
 
 // Точка входа
 const app = express();
@@ -35,7 +35,7 @@ const allowedCors = [
   'https://api.apetruhin.nomoredomains.club',
   'http://apetruhin.nomoredomains.club',
   'https://apetruhin.nomoredomains.club',
-  'localhost:3000',
+  'http://localhost:3000',
 ];
 
 app.set('config', config);
@@ -71,12 +71,12 @@ app.use('/users', users);
 // Роуты Cards
 app.use('/cards', cards);
 
-app.use(errorLogger);
-
 // Заглушка для запроса неуществующих адресо
 app.all('/*', (req, res, next) => {
   next(new NotFoundError('Страница не существует'));
 });
+
+app.use(errorLogger);
 
 app.use(errors());
 
