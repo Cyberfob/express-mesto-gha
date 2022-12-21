@@ -21,7 +21,7 @@ const config = dotenv.config({
 }).parsed;
 
 // Настройка порта
-const { PORT = 3001 } = process.env;
+const { PORT = 3000 } = process.env;
 
 // Точка входа
 const app = express();
