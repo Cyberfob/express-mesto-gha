@@ -8,6 +8,13 @@ const celebrateAuth = celebrate({
   }),
 });
 
+const celebrateRegister = celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }).unknown(true),
+});
+
 const celebrateUpdateMe = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
@@ -42,4 +49,5 @@ module.exports = {
   celebrateUserMeAvatar,
   celebrateCards,
   celebrateCardsParam,
+  celebrateRegister,
 };

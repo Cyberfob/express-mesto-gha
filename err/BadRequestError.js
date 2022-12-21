@@ -1,8 +1,8 @@
-const HTTPError = require('./HTTPError');
-
-class BadRequestError extends HTTPError {
+class BadRequestError extends Error {
   constructor(message) {
-    super(message, 400);
+    super(message);
+    this.name = 'BadRequestError';
+    this.statusCode = 400;
   }
 }
 

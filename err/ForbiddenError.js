@@ -1,8 +1,8 @@
-const HTTPError = require('./HTTPError');
-
-class ForbiddenError extends HTTPError {
+class ForbiddenError extends Error {
   constructor(message) {
-    super(message, 403);
+    super(message);
+    this.name = 'ForbiddenError';
+    this.statusCode = 403;
   }
 }
 

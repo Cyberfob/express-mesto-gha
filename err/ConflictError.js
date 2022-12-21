@@ -1,8 +1,8 @@
-const HTTPError = require('./HTTPError');
-
-class ConflictError extends HTTPError {
+class ConflictError extends Error {
   constructor(message) {
-    super(message, 409);
+    super(message);
+    this.name = 'ConflictError';
+    this.statusCode = 409;
   }
 }
 

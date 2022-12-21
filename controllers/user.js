@@ -21,13 +21,7 @@ module.exports.getUser = (req, res, next) => {
       }
       res.send({ data: userData });
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Ошибка в теле запроса'));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -42,6 +36,7 @@ module.exports.createUser = (req, res, next) => {
         .catch((err) => {
           if (err.code === 11000) {
             next(new ConflictError('Неправильные почта или пароль'));
+            return;
           }
           next(err);
         });
@@ -62,9 +57,8 @@ module.exports.updateUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Ошибка в теле запроса'));
-      } else {
-        next(err);
       }
+      next(err);
     });
 };
 
@@ -95,8 +89,6 @@ module.exports.login = (req, res, next) => {
 module.exports.userInfo = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
-      // const userData = user.toObject();
-      // delete userData.password;
       res.send({ data: user });
     })
     .catch(next);

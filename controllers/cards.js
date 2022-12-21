@@ -28,11 +28,10 @@ module.exports.deleteCard = (req, res, next) => {
     .then((cardData) => {
       if (!cardData) {
         throw new NotFoundError('Карточка не найдена');
-      } else {
-        cardData.remove()
-          .then(() => res.send({ data: cardData }))
-          .catch(next);
       }
+      cardData.remove()
+        .then(() => res.send({ data: cardData }))
+        .catch(next);
     })
     .catch(next);
 };

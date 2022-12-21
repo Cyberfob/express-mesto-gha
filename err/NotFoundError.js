@@ -1,8 +1,8 @@
-const HTTPError = require('./HTTPError');
-
-class NotFoundError extends HTTPError {
+class NotFoundError extends Error {
   constructor(message) {
-    super(message, 404);
+    super(message);
+    this.name = 'ForbiddNotFoundErrorenError';
+    this.statusCode = 404;
   }
 }
 

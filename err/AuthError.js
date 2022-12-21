@@ -1,8 +1,8 @@
-const HTTPError = require('./HTTPError');
-
-class AuthError extends HTTPError {
+class AuthError extends Error {
   constructor(message) {
-    super(message, 401);
+    super(message);
+    this.name = 'AuthError';
+    this.statusCode = 401;
   }
 }
 

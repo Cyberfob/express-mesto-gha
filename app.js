@@ -11,7 +11,7 @@ const cards = require('./routes/cards');
 const { createUser, login } = require('./controllers/user');
 const auth = require('./middlewares/auth');
 const NotFoundError = require('./err/NotFoundError');
-const { celebrateAuth } = require('./validators/validator');
+const { celebrateAuth, celebrateRegister } = require('./validators/validator');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { NODE_ENV } = process.env;
@@ -21,7 +21,7 @@ const config = dotenv.config({
 }).parsed;
 
 // Настройка порта
-const { PORT = 3000 } = process.env;
+const { PORT = 3001 } = process.env;
 
 // Точка входа
 const app = express();
@@ -59,7 +59,7 @@ app.get('/crash-test', () => {
 
 // Роуты без авторизации
 app.post('/signin', celebrateAuth, login);
-app.post('/signup', celebrateAuth, createUser);
+app.post('/signup', celebrateRegister, createUser);
 
 app.use(auth); // Мидлвар авторизации
 
